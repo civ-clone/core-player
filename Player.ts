@@ -11,30 +11,27 @@ import {
 import Civilization from '@civ-clone/core-civilization/Civilization';
 import MandatoryPlayerAction from './MandatoryPlayerAction';
 import PlayerAction from './PlayerAction';
+import HiddenPlayerAction from './HiddenPlayerAction';
 
 interface IPlayer extends IDataObject {
-  getAction(): PlayerAction;
-  getActions(): PlayerAction[];
+  action(): PlayerAction;
+  actions(): PlayerAction[];
   hasActions(): boolean;
   civilization(): Civilization;
   setCivilization(civilization: Civilization): void;
-  id(): number;
-  getMandatoryAction(): MandatoryPlayerAction;
-  getMandatoryActions(): MandatoryPlayerAction[];
+  hiddenActions(): HiddenPlayerAction[];
+  mandatoryAction(): MandatoryPlayerAction;
+  mandatoryActions(): MandatoryPlayerAction[];
   hasMandatoryActions(): boolean;
 }
 
 export class Player extends DataObject implements IPlayer {
-  static id: number = 0;
-
-  #civilization: Civilization | null = null;
-  #id: number;
+  #civilization: Civilization | undefined;
   #ruleRegistry: RuleRegistry;
 
   constructor(ruleRegistry: RuleRegistry = ruleRegistryInstance) {
     super();
 
-    this.#id = Player.id++;
     this.#ruleRegistry = ruleRegistry;
 
     (this.#ruleRegistry as IAddedRegistry).process(Added, this);
@@ -42,22 +39,28 @@ export class Player extends DataObject implements IPlayer {
     this.addKey('civilization');
   }
 
-  getAction(): PlayerAction {
-    const [action] = this.getActions();
+  action(): PlayerAction {
+    const [action] = this.actions();
 
     return action;
   }
 
-  getActions(): PlayerAction[] {
-    return (this.#ruleRegistry as IActionRegistry).process(Action, this).flat();
+  actions(): PlayerAction[] {
+    return (this.#ruleRegistry as IActionRegistry)
+      .process(Action, this)
+      .flat()
+      .filter(
+        (action: PlayerAction): boolean =>
+          !(action instanceof HiddenPlayerAction)
+      );
   }
 
   hasActions(): boolean {
-    return !!this.getAction();
+    return !!this.action();
   }
 
   civilization(): Civilization {
-    if (this.#civilization === null) {
+    if (this.#civilization === undefined) {
       throw new TypeError('Player#civilization is unset.');
     }
 
@@ -68,24 +71,29 @@ export class Player extends DataObject implements IPlayer {
     this.#civilization = civilization;
   }
 
-  id(): number {
-    return this.#id;
+  hiddenActions(): HiddenPlayerAction[] {
+    return (this.#ruleRegistry as IActionRegistry)
+      .process(Action, this)
+      .flat()
+      .filter(
+        (action: PlayerAction): boolean => action instanceof HiddenPlayerAction
+      );
   }
 
-  getMandatoryAction(): MandatoryPlayerAction {
-    const [action] = this.getMandatoryActions();
+  mandatoryAction(): MandatoryPlayerAction {
+    const [action] = this.mandatoryActions();
 
     return action;
   }
 
-  getMandatoryActions(): MandatoryPlayerAction[] {
-    return this.getActions().filter(
+  mandatoryActions(): MandatoryPlayerAction[] {
+    return this.actions().filter(
       (action: PlayerAction): boolean => action instanceof MandatoryPlayerAction
     );
   }
 
   hasMandatoryActions(): boolean {
-    return this.getActions().some(
+    return this.actions().some(
       (action: PlayerAction): boolean => action instanceof MandatoryPlayerAction
     );
   }
