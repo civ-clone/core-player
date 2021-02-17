@@ -28,7 +28,7 @@ class Player extends DataObject_1.DataObject {
         _ruleRegistry.set(this, void 0);
         __classPrivateFieldSet(this, _ruleRegistry, ruleRegistry);
         __classPrivateFieldGet(this, _ruleRegistry).process(Added_1.Added, this);
-        this.addKey('civilization');
+        this.addKey('actions', 'civilization', 'mandatoryActions');
     }
     action() {
         const [action] = this.actions();

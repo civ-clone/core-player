@@ -36,7 +36,7 @@ export class Player extends DataObject implements IPlayer {
 
     (this.#ruleRegistry as IAddedRegistry).process(Added, this);
 
-    this.addKey('civilization');
+    this.addKey('actions', 'civilization', 'mandatoryActions');
   }
 
   action(): PlayerAction {
