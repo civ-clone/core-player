@@ -8,7 +8,8 @@ export interface IPlayerRegistry extends IEntityRegistry<Player> {}
 
 export class PlayerRegistry
   extends EntityRegistry<Player>
-  implements IPlayerRegistry {
+  implements IPlayerRegistry
+{
   constructor() {
     super(Player);
   }

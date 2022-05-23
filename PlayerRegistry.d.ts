@@ -6,7 +6,8 @@ import Player from './Player';
 export interface IPlayerRegistry extends IEntityRegistry<Player> {}
 export declare class PlayerRegistry
   extends EntityRegistry<Player>
-  implements IPlayerRegistry {
+  implements IPlayerRegistry
+{
   constructor();
 }
 export default PlayerRegistry;

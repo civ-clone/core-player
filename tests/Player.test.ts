@@ -15,9 +15,9 @@ describe('Player', (): void => {
     ruleRegistry.register(
       new Action(
         new Effect((): PlayerAction[] => [
-          new PlayerAction(1),
-          new MandatoryPlayerAction(2),
-          new HiddenPlayerAction(3),
+          new PlayerAction(player, 1),
+          new MandatoryPlayerAction(player, 2),
+          new HiddenPlayerAction(player, 3),
         ])
       )
     );

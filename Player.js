@@ -1,18 +1,16 @@
 "use strict";
-var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (receiver, privateMap, value) {
-    if (!privateMap.has(receiver)) {
-        throw new TypeError("attempted to set private field on non-instance");
-    }
-    privateMap.set(receiver, value);
-    return value;
+var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (receiver, state, value, kind, f) {
+    if (kind === "m") throw new TypeError("Private method is not writable");
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a setter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
+    return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
 };
-var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, privateMap) {
-    if (!privateMap.has(receiver)) {
-        throw new TypeError("attempted to get private field on non-instance");
-    }
-    return privateMap.get(receiver);
+var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, state, kind, f) {
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
+    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
-var _civilization, _ruleRegistry;
+var _Player_civilization, _Player_ruleRegistry;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Player = void 0;
 const Action_1 = require("./Rules/Action");
@@ -24,10 +22,10 @@ const HiddenPlayerAction_1 = require("./HiddenPlayerAction");
 class Player extends DataObject_1.DataObject {
     constructor(ruleRegistry = RuleRegistry_1.instance) {
         super();
-        _civilization.set(this, void 0);
-        _ruleRegistry.set(this, void 0);
-        __classPrivateFieldSet(this, _ruleRegistry, ruleRegistry);
-        __classPrivateFieldGet(this, _ruleRegistry).process(Added_1.Added, this);
+        _Player_civilization.set(this, void 0);
+        _Player_ruleRegistry.set(this, void 0);
+        __classPrivateFieldSet(this, _Player_ruleRegistry, ruleRegistry, "f");
+        __classPrivateFieldGet(this, _Player_ruleRegistry, "f").process(Added_1.Added, this);
         this.addKey('actions', 'civilization', 'mandatoryActions');
     }
     action() {
@@ -35,7 +33,7 @@ class Player extends DataObject_1.DataObject {
         return action;
     }
     actions() {
-        return __classPrivateFieldGet(this, _ruleRegistry)
+        return __classPrivateFieldGet(this, _Player_ruleRegistry, "f")
             .process(Action_1.Action, this)
             .flat()
             .filter((action) => !(action instanceof HiddenPlayerAction_1.default));
@@ -44,16 +42,16 @@ class Player extends DataObject_1.DataObject {
         return !!this.action();
     }
     civilization() {
-        if (__classPrivateFieldGet(this, _civilization) === undefined) {
+        if (__classPrivateFieldGet(this, _Player_civilization, "f") === undefined) {
             throw new TypeError('Player#civilization is unset.');
         }
-        return __classPrivateFieldGet(this, _civilization);
+        return __classPrivateFieldGet(this, _Player_civilization, "f");
     }
     setCivilization(civilization) {
-        __classPrivateFieldSet(this, _civilization, civilization);
+        __classPrivateFieldSet(this, _Player_civilization, civilization, "f");
     }
     hiddenActions() {
-        return __classPrivateFieldGet(this, _ruleRegistry)
+        return __classPrivateFieldGet(this, _Player_ruleRegistry, "f")
             .process(Action_1.Action, this)
             .flat()
             .filter((action) => action instanceof HiddenPlayerAction_1.default);
@@ -70,6 +68,6 @@ class Player extends DataObject_1.DataObject {
     }
 }
 exports.Player = Player;
-_civilization = new WeakMap(), _ruleRegistry = new WeakMap();
+_Player_civilization = new WeakMap(), _Player_ruleRegistry = new WeakMap();
 exports.default = Player;
 //# sourceMappingURL=Player.js.map
