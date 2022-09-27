@@ -13,10 +13,10 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 var _Player_civilization, _Player_ruleRegistry;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Player = void 0;
-const Action_1 = require("./Rules/Action");
-const Added_1 = require("./Rules/Added");
 const DataObject_1 = require("@civ-clone/core-data-object/DataObject");
 const RuleRegistry_1 = require("@civ-clone/core-rule/RuleRegistry");
+const Action_1 = require("./Rules/Action");
+const Added_1 = require("./Rules/Added");
 const MandatoryPlayerAction_1 = require("./MandatoryPlayerAction");
 const HiddenPlayerAction_1 = require("./HiddenPlayerAction");
 class Player extends DataObject_1.DataObject {
@@ -25,7 +25,7 @@ class Player extends DataObject_1.DataObject {
         _Player_civilization.set(this, void 0);
         _Player_ruleRegistry.set(this, void 0);
         __classPrivateFieldSet(this, _Player_ruleRegistry, ruleRegistry, "f");
-        __classPrivateFieldGet(this, _Player_ruleRegistry, "f").process(Added_1.Added, this);
+        __classPrivateFieldGet(this, _Player_ruleRegistry, "f").process(Added_1.default, this);
         this.addKey('actions', 'civilization', 'mandatoryActions');
     }
     action() {
@@ -34,7 +34,7 @@ class Player extends DataObject_1.DataObject {
     }
     actions() {
         return __classPrivateFieldGet(this, _Player_ruleRegistry, "f")
-            .process(Action_1.Action, this)
+            .process(Action_1.default, this)
             .flat()
             .filter((action) => !(action instanceof HiddenPlayerAction_1.default));
     }
@@ -52,7 +52,7 @@ class Player extends DataObject_1.DataObject {
     }
     hiddenActions() {
         return __classPrivateFieldGet(this, _Player_ruleRegistry, "f")
-            .process(Action_1.Action, this)
+            .process(Action_1.default, this)
             .flat()
             .filter((action) => action instanceof HiddenPlayerAction_1.default);
     }

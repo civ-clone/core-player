@@ -1,1 +1,1 @@
-{"version":3,"file":"MandatoryPlayerAction.js","sourceRoot":"","sources":["MandatoryPlayerAction.ts"],"names":[],"mappings":";;;AAAA,iDAA0C;AAE1C,MAAa,qBAAsB,SAAQ,sBAAY;CAAG;AAA1D,sDAA0D;AAE1D,kBAAe,qBAAqB,CAAC"}
+{"version":3,"file":"MandatoryPlayerAction.js","sourceRoot":"","sources":["MandatoryPlayerAction.ts"],"names":[],"mappings":";;;AAAA,iDAA0C;AAE1C,MAAa,qBAA+B,SAAQ,sBAAe;CAAG;AAAtE,sDAAsE;AAEtE,kBAAe,qBAAqB,CAAC"}

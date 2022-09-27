@@ -9,11 +9,11 @@ export interface IPlayerAction extends IDataObject {
   value(): any;
 }
 
-export class PlayerAction extends DataObject implements IPlayerAction {
+export class PlayerAction<T = any> extends DataObject implements IPlayerAction {
   #player: Player;
-  #value: any;
+  #value: T;
 
-  constructor(player: Player, value: any) {
+  constructor(player: Player, value: T) {
     super();
 
     this.#player = player;
@@ -26,7 +26,7 @@ export class PlayerAction extends DataObject implements IPlayerAction {
     return this.#player;
   }
 
-  public value(): any {
+  public value(): T {
     return this.#value;
   }
 }

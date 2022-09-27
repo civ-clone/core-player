@@ -1,5 +1,3 @@
-import { Action, IActionRegistry } from './Rules/Action';
-import { Added, IAddedRegistry } from './Rules/Added';
 import {
   DataObject,
   IDataObject,
@@ -8,6 +6,8 @@ import {
   RuleRegistry,
   instance as ruleRegistryInstance,
 } from '@civ-clone/core-rule/RuleRegistry';
+import Action from './Rules/Action';
+import Added from './Rules/Added';
 import Civilization from '@civ-clone/core-civilization/Civilization';
 import MandatoryPlayerAction from './MandatoryPlayerAction';
 import PlayerAction from './PlayerAction';
@@ -34,7 +34,7 @@ export class Player extends DataObject implements IPlayer {
 
     this.#ruleRegistry = ruleRegistry;
 
-    (this.#ruleRegistry as IAddedRegistry).process(Added, this);
+    this.#ruleRegistry.process(Added, this);
 
     this.addKey('actions', 'civilization', 'mandatoryActions');
   }
@@ -46,7 +46,7 @@ export class Player extends DataObject implements IPlayer {
   }
 
   actions(): PlayerAction[] {
-    return (this.#ruleRegistry as IActionRegistry)
+    return this.#ruleRegistry
       .process(Action, this)
       .flat()
       .filter(
@@ -72,7 +72,7 @@ export class Player extends DataObject implements IPlayer {
   }
 
   hiddenActions(): HiddenPlayerAction[] {
-    return (this.#ruleRegistry as IActionRegistry)
+    return this.#ruleRegistry
       .process(Action, this)
       .flat()
       .filter(
