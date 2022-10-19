@@ -17,12 +17,12 @@ const DataObject_1 = require("@civ-clone/core-data-object/DataObject");
 const RuleRegistry_1 = require("@civ-clone/core-rule/RuleRegistry");
 const Action_1 = require("./Rules/Action");
 const Added_1 = require("./Rules/Added");
-const MandatoryPlayerAction_1 = require("./MandatoryPlayerAction");
 const HiddenPlayerAction_1 = require("./HiddenPlayerAction");
+const MandatoryPlayerAction_1 = require("./MandatoryPlayerAction");
 class Player extends DataObject_1.DataObject {
     constructor(ruleRegistry = RuleRegistry_1.instance) {
         super();
-        _Player_civilization.set(this, void 0);
+        _Player_civilization.set(this, null);
         _Player_ruleRegistry.set(this, void 0);
         __classPrivateFieldSet(this, _Player_ruleRegistry, ruleRegistry, "f");
         __classPrivateFieldGet(this, _Player_ruleRegistry, "f").process(Added_1.default, this);
@@ -38,17 +38,17 @@ class Player extends DataObject_1.DataObject {
             .flat()
             .filter((action) => !(action instanceof HiddenPlayerAction_1.default));
     }
-    hasActions() {
-        return !!this.action();
-    }
     civilization() {
-        if (__classPrivateFieldGet(this, _Player_civilization, "f") === undefined) {
+        if (__classPrivateFieldGet(this, _Player_civilization, "f") === null) {
             throw new TypeError('Player#civilization is unset.');
         }
         return __classPrivateFieldGet(this, _Player_civilization, "f");
     }
-    setCivilization(civilization) {
-        __classPrivateFieldSet(this, _Player_civilization, civilization, "f");
+    hasActions() {
+        return !!this.action();
+    }
+    hasMandatoryActions() {
+        return this.actions().some((action) => action instanceof MandatoryPlayerAction_1.default);
     }
     hiddenActions() {
         return __classPrivateFieldGet(this, _Player_ruleRegistry, "f")
@@ -63,8 +63,8 @@ class Player extends DataObject_1.DataObject {
     mandatoryActions() {
         return this.actions().filter((action) => action instanceof MandatoryPlayerAction_1.default);
     }
-    hasMandatoryActions() {
-        return this.actions().some((action) => action instanceof MandatoryPlayerAction_1.default);
+    setCivilization(civilization) {
+        __classPrivateFieldSet(this, _Player_civilization, civilization, "f");
     }
 }
 exports.Player = Player;

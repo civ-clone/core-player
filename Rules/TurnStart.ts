@@ -1,8 +1,6 @@
 import Player from '../Player';
 import Rule from '@civ-clone/core-rule/Rule';
 
-type TurnStartArgs = [Player];
-
-export class TurnStart extends Rule<TurnStartArgs, void> {}
+export class TurnStart extends Rule<[Player], void> {}
 
 export default TurnStart;

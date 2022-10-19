@@ -9,24 +9,24 @@ import {
 import Action from './Rules/Action';
 import Added from './Rules/Added';
 import Civilization from '@civ-clone/core-civilization/Civilization';
+import HiddenPlayerAction from './HiddenPlayerAction';
 import MandatoryPlayerAction from './MandatoryPlayerAction';
 import PlayerAction from './PlayerAction';
-import HiddenPlayerAction from './HiddenPlayerAction';
 
 interface IPlayer extends IDataObject {
   action(): PlayerAction;
   actions(): PlayerAction[];
-  hasActions(): boolean;
   civilization(): Civilization;
-  setCivilization(civilization: Civilization): void;
+  hasActions(): boolean;
+  hasMandatoryActions(): boolean;
   hiddenActions(): HiddenPlayerAction[];
   mandatoryAction(): MandatoryPlayerAction;
   mandatoryActions(): MandatoryPlayerAction[];
-  hasMandatoryActions(): boolean;
+  setCivilization(civilization: Civilization): void;
 }
 
 export class Player extends DataObject implements IPlayer {
-  #civilization: Civilization | undefined;
+  #civilization: Civilization | null = null;
   #ruleRegistry: RuleRegistry;
 
   constructor(ruleRegistry: RuleRegistry = ruleRegistryInstance) {
@@ -55,20 +55,22 @@ export class Player extends DataObject implements IPlayer {
       );
   }
 
-  hasActions(): boolean {
-    return !!this.action();
-  }
-
   civilization(): Civilization {
-    if (this.#civilization === undefined) {
+    if (this.#civilization === null) {
       throw new TypeError('Player#civilization is unset.');
     }
 
     return this.#civilization;
   }
 
-  setCivilization(civilization: Civilization): void {
-    this.#civilization = civilization;
+  hasActions(): boolean {
+    return !!this.action();
+  }
+
+  hasMandatoryActions(): boolean {
+    return this.actions().some(
+      (action: PlayerAction): boolean => action instanceof MandatoryPlayerAction
+    );
   }
 
   hiddenActions(): HiddenPlayerAction[] {
@@ -92,10 +94,8 @@ export class Player extends DataObject implements IPlayer {
     );
   }
 
-  hasMandatoryActions(): boolean {
-    return this.actions().some(
-      (action: PlayerAction): boolean => action instanceof MandatoryPlayerAction
-    );
+  setCivilization(civilization: Civilization): void {
+    this.#civilization = civilization;
   }
 }
 
