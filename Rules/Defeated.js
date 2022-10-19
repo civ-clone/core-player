@@ -6,4 +6,4 @@ class Defeated extends Rule_1.default {
 }
 exports.Defeated = Defeated;
 exports.default = Defeated;
-//# sourceMappingURL=Defetead.js.map
+//# sourceMappingURL=Defeated.js.map
