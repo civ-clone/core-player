@@ -10,24 +10,24 @@ export interface IPlayerAction extends IDataObject {
 }
 
 export class PlayerAction<T = any> extends DataObject implements IPlayerAction {
-  #player: Player;
-  #value: T;
+  private _player: Player;
+  private _value: T;
 
   constructor(player: Player, value: T) {
     super();
 
-    this.#player = player;
-    this.#value = value;
+    this._player = player;
+    this._value = value;
 
     this.addKey('value');
   }
 
   public player(): Player {
-    return this.#player;
+    return this._player;
   }
 
   public value(): T {
-    return this.#value;
+    return this._value;
   }
 }
 

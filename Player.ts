@@ -26,15 +26,15 @@ interface IPlayer extends IDataObject {
 }
 
 export class Player extends DataObject implements IPlayer {
-  #civilization: Civilization | null = null;
-  #ruleRegistry: RuleRegistry;
+  private _civilization: Civilization | null = null;
+  private _ruleRegistry: RuleRegistry;
 
   constructor(ruleRegistry: RuleRegistry = ruleRegistryInstance) {
     super();
 
-    this.#ruleRegistry = ruleRegistry;
+    this._ruleRegistry = ruleRegistry;
 
-    this.#ruleRegistry.process(Added, this);
+    this._ruleRegistry.process(Added, this);
 
     this.addKey('actions', 'civilization', 'mandatoryActions');
   }
@@ -46,7 +46,7 @@ export class Player extends DataObject implements IPlayer {
   }
 
   actions(): PlayerAction[] {
-    return this.#ruleRegistry
+    return this._ruleRegistry
       .process(Action, this)
       .flat()
       .filter(
@@ -56,11 +56,11 @@ export class Player extends DataObject implements IPlayer {
   }
 
   civilization(): Civilization {
-    if (this.#civilization === null) {
+    if (this._civilization === null) {
       throw new TypeError('Player#civilization is unset.');
     }
 
-    return this.#civilization;
+    return this._civilization;
   }
 
   hasActions(): boolean {
@@ -74,7 +74,7 @@ export class Player extends DataObject implements IPlayer {
   }
 
   hiddenActions(): HiddenPlayerAction[] {
-    return this.#ruleRegistry
+    return this._ruleRegistry
       .process(Action, this)
       .flat()
       .filter(
@@ -95,7 +95,7 @@ export class Player extends DataObject implements IPlayer {
   }
 
   setCivilization(civilization: Civilization): void {
-    this.#civilization = civilization;
+    this._civilization = civilization;
   }
 }
 

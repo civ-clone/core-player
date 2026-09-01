@@ -19,7 +19,8 @@ interface IPlayer extends IDataObject {
   setCivilization(civilization: Civilization): void;
 }
 export declare class Player extends DataObject implements IPlayer {
-  #private;
+  private _civilization;
+  private _ruleRegistry;
   constructor(ruleRegistry?: RuleRegistry);
   action(): PlayerAction;
   actions(): PlayerAction[];

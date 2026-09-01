@@ -11,7 +11,8 @@ export declare class PlayerAction<T = any>
   extends DataObject
   implements IPlayerAction
 {
-  #private;
+  private _player;
+  private _value;
   constructor(player: Player, value: T);
   player(): Player;
   value(): T;

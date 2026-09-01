@@ -1,16 +1,4 @@
 "use strict";
-var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (receiver, state, value, kind, f) {
-    if (kind === "m") throw new TypeError("Private method is not writable");
-    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a setter");
-    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
-    return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
-};
-var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, state, kind, f) {
-    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
-    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
-    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
-};
-var _Player_civilization, _Player_ruleRegistry;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Player = void 0;
 const DataObject_1 = require("@civ-clone/core-data-object/DataObject");
@@ -22,10 +10,9 @@ const MandatoryPlayerAction_1 = require("./MandatoryPlayerAction");
 class Player extends DataObject_1.DataObject {
     constructor(ruleRegistry = RuleRegistry_1.instance) {
         super();
-        _Player_civilization.set(this, null);
-        _Player_ruleRegistry.set(this, void 0);
-        __classPrivateFieldSet(this, _Player_ruleRegistry, ruleRegistry, "f");
-        __classPrivateFieldGet(this, _Player_ruleRegistry, "f").process(Added_1.default, this);
+        this._civilization = null;
+        this._ruleRegistry = ruleRegistry;
+        this._ruleRegistry.process(Added_1.default, this);
         this.addKey('actions', 'civilization', 'mandatoryActions');
     }
     action() {
@@ -33,16 +20,16 @@ class Player extends DataObject_1.DataObject {
         return action;
     }
     actions() {
-        return __classPrivateFieldGet(this, _Player_ruleRegistry, "f")
+        return this._ruleRegistry
             .process(Action_1.default, this)
             .flat()
             .filter((action) => !(action instanceof HiddenPlayerAction_1.default));
     }
     civilization() {
-        if (__classPrivateFieldGet(this, _Player_civilization, "f") === null) {
+        if (this._civilization === null) {
             throw new TypeError('Player#civilization is unset.');
         }
-        return __classPrivateFieldGet(this, _Player_civilization, "f");
+        return this._civilization;
     }
     hasActions() {
         return !!this.action();
@@ -51,7 +38,7 @@ class Player extends DataObject_1.DataObject {
         return this.actions().some((action) => action instanceof MandatoryPlayerAction_1.default);
     }
     hiddenActions() {
-        return __classPrivateFieldGet(this, _Player_ruleRegistry, "f")
+        return this._ruleRegistry
             .process(Action_1.default, this)
             .flat()
             .filter((action) => action instanceof HiddenPlayerAction_1.default);
@@ -64,10 +51,9 @@ class Player extends DataObject_1.DataObject {
         return this.actions().filter((action) => action instanceof MandatoryPlayerAction_1.default);
     }
     setCivilization(civilization) {
-        __classPrivateFieldSet(this, _Player_civilization, civilization, "f");
+        this._civilization = civilization;
     }
 }
 exports.Player = Player;
-_Player_civilization = new WeakMap(), _Player_ruleRegistry = new WeakMap();
 exports.default = Player;
 //# sourceMappingURL=Player.js.map
