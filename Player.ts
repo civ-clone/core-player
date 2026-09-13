@@ -26,6 +26,7 @@ interface IPlayer extends IDataObject {
 }
 
 export class Player extends DataObject implements IPlayer {
+  static readonly transient = ['_ruleRegistry'];
   private _civilization: Civilization | null = null;
   private _ruleRegistry: RuleRegistry;
 

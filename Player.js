@@ -55,5 +55,6 @@ class Player extends DataObject_1.DataObject {
     }
 }
 exports.Player = Player;
+Player.transient = ['_ruleRegistry'];
 exports.default = Player;
 //# sourceMappingURL=Player.js.map

@@ -19,6 +19,7 @@ interface IPlayer extends IDataObject {
   setCivilization(civilization: Civilization): void;
 }
 export declare class Player extends DataObject implements IPlayer {
+  static readonly transient: string[];
   private _civilization;
   private _ruleRegistry;
   constructor(ruleRegistry?: RuleRegistry);
