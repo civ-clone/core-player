@@ -29,7 +29,21 @@ export declare class Player extends DataObject implements IPlayer {
   hasActions(): boolean;
   hasMandatoryActions(): boolean;
   hiddenActions(): HiddenPlayerAction[];
+  /** `undefined` when there are none, as before. */
   mandatoryAction(): MandatoryPlayerAction;
+  /**
+   * The first of `mandatoryActions()`, without building the rest.
+   *
+   * The `Action` rules run in order and this stops at the first one that
+   * offers a `MandatoryPlayerAction`. An AI asks for the next action once per
+   * action it takes, and building every action each time was most of the cost
+   * of a late-game turn's action handling (civ-clone/web-renderer#314).
+   *
+   * Unlike `RuleRegistry.process`, each rule is processed before the next one
+   * is validated. `Action` rules only build `PlayerAction`s, so the action
+   * found is the same as `mandatoryActions()[0]`.
+   */
+  private firstMandatoryAction;
   mandatoryActions(): MandatoryPlayerAction[];
   setCivilization(civilization: Civilization): void;
 }

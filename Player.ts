@@ -69,9 +69,7 @@ export class Player extends DataObject implements IPlayer {
   }
 
   hasMandatoryActions(): boolean {
-    return this.actions().some(
-      (action: PlayerAction): boolean => action instanceof MandatoryPlayerAction
-    );
+    return this.firstMandatoryAction() !== undefined;
   }
 
   hiddenActions(): HiddenPlayerAction[] {
@@ -83,10 +81,41 @@ export class Player extends DataObject implements IPlayer {
       );
   }
 
+  /** `undefined` when there are none, as before. */
   mandatoryAction(): MandatoryPlayerAction {
-    const [action] = this.mandatoryActions();
+    return this.firstMandatoryAction() as MandatoryPlayerAction;
+  }
 
-    return action;
+  /**
+   * The first of `mandatoryActions()`, without building the rest.
+   *
+   * The `Action` rules run in order and this stops at the first one that
+   * offers a `MandatoryPlayerAction`. An AI asks for the next action once per
+   * action it takes, and building every action each time was most of the cost
+   * of a late-game turn's action handling (civ-clone/web-renderer#314).
+   *
+   * Unlike `RuleRegistry.process`, each rule is processed before the next one
+   * is validated. `Action` rules only build `PlayerAction`s, so the action
+   * found is the same as `mandatoryActions()[0]`.
+   */
+  private firstMandatoryAction(): MandatoryPlayerAction | undefined {
+    const rules = this._ruleRegistry.get(Action);
+
+    for (let index = 0; index < rules.length; index++) {
+      if (!rules[index].validate(this)) {
+        continue;
+      }
+
+      const actions = [rules[index].process(this) ?? []].flat();
+
+      for (let actionIndex = 0; actionIndex < actions.length; actionIndex++) {
+        if (actions[actionIndex] instanceof MandatoryPlayerAction) {
+          return actions[actionIndex] as MandatoryPlayerAction;
+        }
+      }
+    }
+
+    return undefined;
   }
 
   mandatoryActions(): MandatoryPlayerAction[] {
