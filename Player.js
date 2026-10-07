@@ -35,7 +35,7 @@ class Player extends DataObject_1.DataObject {
         return !!this.action();
     }
     hasMandatoryActions() {
-        return this.actions().some((action) => action instanceof MandatoryPlayerAction_1.default);
+        return this.firstMandatoryAction() !== undefined;
     }
     hiddenActions() {
         return this._ruleRegistry
@@ -43,9 +43,37 @@ class Player extends DataObject_1.DataObject {
             .flat()
             .filter((action) => action instanceof HiddenPlayerAction_1.default);
     }
+    /** `undefined` when there are none, as before. */
     mandatoryAction() {
-        const [action] = this.mandatoryActions();
-        return action;
+        return this.firstMandatoryAction();
+    }
+    /**
+     * The first of `mandatoryActions()`, without building the rest.
+     *
+     * The `Action` rules run in order and this stops at the first one that
+     * offers a `MandatoryPlayerAction`. An AI asks for the next action once per
+     * action it takes, and building every action each time was most of the cost
+     * of a late-game turn's action handling (civ-clone/web-renderer#314).
+     *
+     * Unlike `RuleRegistry.process`, each rule is processed before the next one
+     * is validated. `Action` rules only build `PlayerAction`s, so the action
+     * found is the same as `mandatoryActions()[0]`.
+     */
+    firstMandatoryAction() {
+        var _a;
+        const rules = this._ruleRegistry.get(Action_1.default);
+        for (let index = 0; index < rules.length; index++) {
+            if (!rules[index].validate(this)) {
+                continue;
+            }
+            const actions = [(_a = rules[index].process(this)) !== null && _a !== void 0 ? _a : []].flat();
+            for (let actionIndex = 0; actionIndex < actions.length; actionIndex++) {
+                if (actions[actionIndex] instanceof MandatoryPlayerAction_1.default) {
+                    return actions[actionIndex];
+                }
+            }
+        }
+        return undefined;
     }
     mandatoryActions() {
         return this.actions().filter((action) => action instanceof MandatoryPlayerAction_1.default);
