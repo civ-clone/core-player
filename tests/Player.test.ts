@@ -76,7 +76,7 @@ describe('Player', (): void => {
       )
     );
 
-    expect(player.mandatoryAction().value()).equal(4);
+    expect(player.mandatoryAction()?.value()).equal(4);
     expect(processed).deep.equal([1, 3]);
     expect(player.hasMandatoryActions()).true;
     expect(
