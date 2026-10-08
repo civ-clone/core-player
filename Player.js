@@ -43,7 +43,7 @@ class Player extends DataObject_1.DataObject {
             .flat()
             .filter((action) => action instanceof HiddenPlayerAction_1.default);
     }
-    /** `undefined` when there are none, as before. */
+    /** `undefined` when there are none. */
     mandatoryAction() {
         return this.firstMandatoryAction();
     }

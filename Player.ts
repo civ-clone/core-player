@@ -20,7 +20,7 @@ interface IPlayer extends IDataObject {
   hasActions(): boolean;
   hasMandatoryActions(): boolean;
   hiddenActions(): HiddenPlayerAction[];
-  mandatoryAction(): MandatoryPlayerAction;
+  mandatoryAction(): MandatoryPlayerAction | undefined;
   mandatoryActions(): MandatoryPlayerAction[];
   setCivilization(civilization: Civilization): void;
 }
@@ -81,9 +81,9 @@ export class Player extends DataObject implements IPlayer {
       );
   }
 
-  /** `undefined` when there are none, as before. */
-  mandatoryAction(): MandatoryPlayerAction {
-    return this.firstMandatoryAction() as MandatoryPlayerAction;
+  /** `undefined` when there are none. */
+  mandatoryAction(): MandatoryPlayerAction | undefined {
+    return this.firstMandatoryAction();
   }
 
   /**
